@@ -50,15 +50,12 @@ RUN buildDeps=" \
     && ls -al \
     && cd "ocserv-$OC_VERSION/" \
     && patch --strip=1 < ../"cisco-webvpnlogin-$OC_VERSION.patch" \
-    && cd .. \
-    && mv "ocserv-$OC_VERSION" /usr/src/ocserv \
-	&& cd /usr/src/ocserv/ \
-    && rm ocserv.patch \
+    && rm -f ../"cisco-webvpnlogin-$OC_VERSION.patch" \
 	&& ./configure \
 	&& make \
 	&& make install \
 	&& cd / \
-	&& rm -rf /usr/src/ocserv \
+	&& rm -rf /"ocserv-$OC_VERSION" \
 	&& runDeps="$( \
 			scanelf --needed --nobanner /usr/local/sbin/ocserv \
 				| awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
