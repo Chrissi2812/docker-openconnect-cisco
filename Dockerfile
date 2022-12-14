@@ -41,12 +41,14 @@ RUN buildDeps=" \
 	# The commented out line below grabs the most recent version of OC from the page which may be an unreleased version
 	# && export OC_VERSION=$(curl --silent "https://ocserv.gitlab.io/www/changelog.html" 2>&1 | grep -m 1 'Version' | awk '/Version/ {print $2}') \
 	# The line below grabs the 2nd most recent version of OC
-	&& export OC_VERSION=$(curl --silent "https://ocserv.gitlab.io/www/changelog.html" 2>&1 | grep -m 2 'Version' | tail -n 1 | awk '/Version/ {print $2}') \
+	&& export OC_VERSION=1.1.6 \
 	&& curl -SL "ftp://ftp.infradead.org/pub/ocserv/ocserv-$OC_VERSION.tar.xz" -o ocserv.tar.xz \
+	&& curl -SL "https://raw.githubusercontent.com/usecallmanagernz/patches/master/ocserv/cisco-webvpnlogin-$OC_VERSION.patch" -o ocserv.patch \
 	&& mkdir -p /usr/src/ocserv \
 	&& tar -xf ocserv.tar.xz -C /usr/src/ocserv --strip-components=1 \
 	&& rm ocserv.tar.xz* \
 	&& cd /usr/src/ocserv \
+    && patch --strip=1 < ../ocserv.patch \
 	&& ./configure \
 	&& make \
 	&& make install \
@@ -60,10 +62,10 @@ RUN buildDeps=" \
 			)" \
 	&& apk add --update --virtual .run-deps $runDeps gnutls-utils iptables \
 	&& apk del .build-deps \
-	&& rm -rf /var/cache/apk/* 
-	
+	&& rm -rf /var/cache/apk/*
+
 RUN apk add --update bash rsync ipcalc sipcalc ca-certificates rsyslog logrotate runit \
-	&& rm -rf /var/cache/apk/* 
+	&& rm -rf /var/cache/apk/*
 
 RUN update-ca-certificates
 
