@@ -27,6 +27,7 @@ RUN buildDeps=" \
 		oath-toolkit-liboath \
 		oath-toolkit-libpskc \
 		p11-kit \
+        patch \
 		pcsc-lite-libs \
 		protobuf-c \
 		readline-dev \
@@ -46,6 +47,7 @@ RUN buildDeps=" \
     && curl -OSL "https://raw.githubusercontent.com/usecallmanagernz/patches/master/ocserv/cisco-webvpnlogin-$OC_VERSION.patch" \
 	&& tar --extract --xz --file "ocserv-$OC_VERSION.tar.xz" \
 	&& rm "ocserv-$OC_VERSION.tar.xz" \
+    && ls -al \
     && cd "ocserv-$OC_VERSION/" \
     && patch --strip=1 < ../"cisco-webvpnlogin-$OC_VERSION.patch" \
     && cd .. \
