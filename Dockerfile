@@ -43,12 +43,13 @@ RUN buildDeps=" \
 	# The line below grabs the 2nd most recent version of OC
 	&& export OC_VERSION=1.1.6 \
 	&& curl -SL "ftp://ftp.infradead.org/pub/ocserv/ocserv-$OC_VERSION.tar.xz" -o ocserv.tar.xz \
-	&& curl -SL "https://raw.githubusercontent.com/usecallmanagernz/patches/master/ocserv/cisco-webvpnlogin-$OC_VERSION.patch" -o ocserv.patch \
 	&& mkdir -p /usr/src/ocserv \
 	&& tar -xf ocserv.tar.xz -C /usr/src/ocserv --strip-components=1 \
 	&& rm ocserv.tar.xz* \
 	&& cd /usr/src/ocserv \
-    && patch --strip=1 < ../ocserv.patch \
+    && curl -SL "https://raw.githubusercontent.com/usecallmanagernz/patches/master/ocserv/cisco-webvpnlogin-$OC_VERSION.patch" -o ocserv.patch \
+    && patch --strip=1 < ocserv.patch \
+    && rm ocserv.patch \
 	&& ./configure \
 	&& make \
 	&& make install \
