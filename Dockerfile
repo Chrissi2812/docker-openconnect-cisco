@@ -46,11 +46,11 @@ RUN buildDeps=" \
     && curl -OSL "https://raw.githubusercontent.com/usecallmanagernz/patches/master/ocserv/cisco-webvpnlogin-$OC_VERSION.patch" \
 	&& tar -xf "ocserv-$OC_VERSION.tar.xz" --strip-components=1 \
 	&& rm "ocserv-$OC_VERSION.tar.xz" \
-    && cd "ocserv-$OC_VERSION" \
+    && cd "ocserv-$OC_VERSION/" \
     && patch --strip=1 < ../"cisco-webvpnlogin-$OC_VERSION.patch" \
     && cd .. \
     && mv "ocserv-$OC_VERSION" /usr/src/ocserv \
-	&& cd /usr/src/ocserv \
+	&& cd /usr/src/ocserv/ \
     && rm ocserv.patch \
 	&& ./configure \
 	&& make \
