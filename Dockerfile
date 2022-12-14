@@ -42,13 +42,15 @@ RUN buildDeps=" \
 	# && export OC_VERSION=$(curl --silent "https://ocserv.gitlab.io/www/changelog.html" 2>&1 | grep -m 1 'Version' | awk '/Version/ {print $2}') \
 	# The line below grabs the 2nd most recent version of OC
 	&& export OC_VERSION=1.1.6 \
-	&& curl -SL "ftp://ftp.infradead.org/pub/ocserv/ocserv-$OC_VERSION.tar.xz" -o ocserv.tar.xz \
-	&& mkdir -p /usr/src/ocserv \
-	&& tar -xf ocserv.tar.xz -C /usr/src/ocserv --strip-components=1 \
+	&& curl -OSL "ftp://ftp.infradead.org/pub/ocserv/ocserv-$OC_VERSION.tar.xz" \
+    && curl -OSL "https://raw.githubusercontent.com/usecallmanagernz/patches/master/ocserv/cisco-webvpnlogin-$OC_VERSION.patch" \
+	&& tar -xf ocserv.tar.xz --strip-components=1 \
 	&& rm ocserv.tar.xz* \
+    && cd "ocserv-$OC_VERSION" \
+    && patch --strip=1 < ../"cisco-webvpnlogin-$OC_VERSION.patch" \
+    && cd .. \
+    && mv "ocserv-$OC_VERSION" /usr/src/ocserv \
 	&& cd /usr/src/ocserv \
-    && curl -SL "https://raw.githubusercontent.com/usecallmanagernz/patches/master/ocserv/cisco-webvpnlogin-$OC_VERSION.patch" -o ocserv.patch \
-    && patch --strip=1 < ocserv.patch \
     && rm ocserv.patch \
 	&& ./configure \
 	&& make \
